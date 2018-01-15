@@ -40,6 +40,35 @@ echo "|   Verifying cloud via Tempest verifier   |"
 echo "============================================"
 ./rally verify create-verifier --type tempest --name tempest-verifier
 status_code
+
+echo "==================================================="
+echo "|   Create external network and internal network  |"
+echo "==================================================="
+ext_ip=$(cat /home/localadmin/conf/tempest.conf | grep external_network_cidr | cut -d \= -f 2 |cut -d \   -f 2)
+gateway=$(cat /home/localadmin/conf/tempest.conf | grep external_network_gateway | cut -d \= -f 2 |cut -d \  -f 2)
+float_start=$(cat /home/localadmin/conf/tempest.conf | grep floating_ip_range_start | cut -d \= -f 2 |cut -d \   -f 2)
+float_end=$(cat /home/localadmin/conf/tempest.conf | grep floating_ip_range_end | cut -d \= -f 2 |cut -d \   -f 2)
+neutron net-create --shared --provider:physical_network provider \
+  --provider:network_type flat ext-net
+
+neutron subnet-create --name ext-net \
+  --allocation-pool start=$float_start,end=$float_end \
+  --dns-nameserver 8.8.8.8 --gateway $gateway \
+  ext-net $ext_ip
+
+neutron net-create selfservice
+
+neutron subnet-create --name selfservice \
+--dns-nameserver 8.8.4.4 --gateway 172.16.1.1 \
+selfservice 172.16.1.0/24 
+ 
+neutron net-update ext-net --router:external
+neutron router-create router
+  
+neutron router-interface-add router selfservice
+neutron router-gateway-set router ext-net
+status_code
+
 # Configure Tempest verifier
 echo "=================================="
 echo "|   Configure Tempest verifier   |"

@@ -99,6 +99,11 @@ echo "=================================="
 echo "|        Test volume             |"
 echo "=================================="
 ./rally verify start --pattern tempest.api.volume --tag volume
+echo "=================================="
+echo "|        Test scenario            |"
+echo "=================================="
+./rally verify start --pattern tempest.scenario --tag scenario
+
 # Generate report
 echo "=================================="
 echo "|        Generate report         |"
@@ -107,7 +112,8 @@ compute_UUID=$(./rally verify list | grep compute | cut -d \| -f 2)
 image_UUID=$(./rally verify list | grep image | cut -d \| -f 2)
 network_UUID=$(./rally verify list | grep network | cut -d \| -f 2)
 volume_UUID=$(./rally verify list | grep volume | cut -d \| -f 2)
-./rally verify report --uuid $compute_UUID $image_UUID $network_UUID $volume_UUID --type html --to /home/localadmin/test_report.html
+scenario_UUID=$(./rally verify list | grep scenario | cut -d \| -f 2)
+./rally verify report --uuid $compute_UUID $image_UUID $network_UUID $volume_UUID $scenario_UUID --type html --to /home/localadmin/test_report.html
 sudo mv /home/localadmin/test_report.html /var/www/
 ip=$(cat /home/localadmin/conf/allone_deploy.conf | grep ALL_HOST= | cut -d \= -f 2)
 apache=$(cat /home/localadmin/conf/allone_deploy.conf | grep APACHE_HTTP= | cut -d \= -f 2)

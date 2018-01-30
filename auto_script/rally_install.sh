@@ -14,7 +14,10 @@ fi
 echo "=================================="
 echo "|   Install Dependence Package   |"
 echo "=================================="
+sudo mv /etc/apt/sources.list  /etc/apt/sources.list.backup1
+sudo mv /etc/apt/sources.list.backup  /etc/apt/sources.list
 sudo apt-get update  -y
+sudo printf 'n\ny\ny\n' | sudo aptitude install libffi-dev 
 sudo apt-get install libffi-dev libpq-dev libxml2-dev libxslt1-dev python-dev git python-pip  -y
 sudo pip install virtualenv
 status_code
@@ -68,7 +71,6 @@ neutron router-create router
 neutron router-interface-add router selfservice
 neutron router-gateway-set router ext-net
 status_code
-
 # Configure Tempest verifier
 echo "=================================="
 echo "|   Configure Tempest verifier   |"
@@ -80,6 +82,7 @@ python /home/localadmin/set_tempest_conf.py
 # Cp tempest.conf to rally dir
 cp /home/localadmin/conf/tempest.conf /home/localadmin/.rally/verification/*/for-*/
 rm -rf /home/localadmin/.rally/verification/*/repo
+git clone https://github.com/dommgifer/repo.git /home/localadmin/repo
 mv /home/localadmin/repo /home/localadmin/.rally/verification/*/
 status_code
 # Test start
@@ -103,7 +106,6 @@ echo "=================================="
 echo "|        Test scenario            |"
 echo "=================================="
 ./rally verify start --pattern tempest.scenario --tag scenario
-
 # Generate report
 echo "=================================="
 echo "|        Generate report         |"

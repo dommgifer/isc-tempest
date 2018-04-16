@@ -14,23 +14,26 @@ fi
 echo "=================================="
 echo "|   Install Dependence Package   |"
 echo "=================================="
-sudo mv /etc/apt/sources.list  /etc/apt/sources.list.backup1
-sudo mv /etc/apt/sources.list.backup  /etc/apt/sources.list
+#sudo mv /etc/apt/sources.list  /etc/apt/sources.list.backup1
+#sudo mv /etc/apt/sources.list.backup  /etc/apt/sources.list
 sudo apt-get update  -y
 sudo printf 'n\ny\ny\n' | sudo aptitude install libffi-dev 
-sudo apt-get install libffi-dev libpq-dev libxml2-dev libxslt1-dev python-dev git python-pip  -y
+sudo apt-get install libffi-dev libpq-dev libxml2-dev libxslt1-dev python-dev git python-pip libffi-dev  -y
 sudo pip install virtualenv
 status_code
 # Install rally
 echo "====================="
 echo "|   Install rally   |"
 echo "====================="
+cp set_tempest_conf.py /home/localadmin/
+cp tempest.conf /home/localadmin/conf/
+
 wget -q -O- https://raw.githubusercontent.com/openstack/rally/master/install_rally.sh | bash
 status_code
 # source admin
 source /home/localadmin/creds/admin-openrc.sh
 # cd to rally dir
-cd rally/bin
+cd /home/localadmin/rally/bin
 # Registering an OpenStack deployment in Rally
 echo "===================================================="
 echo "|   Registering an OpenStack deployment in Rally   |"
@@ -81,9 +84,13 @@ status_code
 python /home/localadmin/set_tempest_conf.py
 # Cp tempest.conf to rally dir
 cp /home/localadmin/conf/tempest.conf /home/localadmin/.rally/verification/*/for-*/
-rm -rf /home/localadmin/.rally/verification/*/repo
-git clone https://github.com/dommgifer/repo.git /home/localadmin/repo
-mv /home/localadmin/repo /home/localadmin/.rally/verification/*/
+cp /home/localadmin/isc-tempest/common/waiters.py /home/localadmin/.rally/verification/*/repo/tempest/common/
+cp /home/localadmin/isc-tempest/lib/api_schema/response/compute/v2_1/* /home/localadmin/.rally/verification/*/repo/tempest/lib/api_schema/response/compute/v2_1/
+cp /home/localadmin/isc-tempest/lib/common/cred_client.py /home/localadmin/.rally/verification/*/repo/tempest/lib/common/
+cp /home/localadmin/isc-tempest/lib/services/compute/images_client.py /home/localadmin/.rally/verification/*/repo/tempest/lib/services/compute/
+#rm -rf /home/localadmin/.rally/verification/*/repo
+#git clone https://github.com/dommgifer/repo.git /home/localadmin/repo
+#mv /home/localadmin/repo /home/localadmin/.rally/verification/*/
 status_code
 # Test start
 echo "=================================="

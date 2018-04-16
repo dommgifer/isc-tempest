@@ -17,7 +17,7 @@ echo "=================================="
 #sudo mv /etc/apt/sources.list  /etc/apt/sources.list.backup1
 #sudo mv /etc/apt/sources.list.backup  /etc/apt/sources.list
 sudo apt-get update  -y
-sudo printf 'n\ny\ny\n' | sudo aptitude install libffi-dev 
+#sudo printf 'n\ny\ny\n' | sudo aptitude install libffi-dev 
 sudo apt-get install libffi-dev libpq-dev libxml2-dev libxslt1-dev python-dev git python-pip libffi-dev  -y
 sudo pip install virtualenv
 status_code

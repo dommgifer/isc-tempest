@@ -25,8 +25,8 @@ status_code
 echo "====================="
 echo "|   Install rally   |"
 echo "====================="
-cp set_tempest_conf.py /home/localadmin/
-cp tempest.conf /home/localadmin/conf/
+cp /home/localadmin/isc-tempest/auto_script/set_tempest_conf.py /home/localadmin/
+cp /home/localadmin/isc-tempest/auto_script/tempest.conf /home/localadmin/conf/
 
 wget -q -O- https://raw.githubusercontent.com/openstack/rally/master/install_rally.sh | bash
 status_code
